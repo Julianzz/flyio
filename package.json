@@ -1,0 +1,22 @@
+{
+  "name": "editor",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+	
+  "dependencies": {
+      "express.io":"*",
+      "moniker":"*",
+      "underscore":"*",
+      "asyncjs":"*",
+      "vfs": "git://github.com/c9/vfs.git#6c7249e96a5cde8b7957fbdf1cb838a9a7959afb",
+      "vfs-nodefs-adapter": "0.3.0",
+      "vfs-local": "https://github.com/c9/vfs-local/tarball/5a95c4a7b313acef3338c31da0001a0d13e9c452"
+  },
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD"
+}
