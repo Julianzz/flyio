@@ -2,7 +2,7 @@ EventEmitter = require("events").EventEmitter
 
 eventbus = new EventEmitter()
 
-module.exports = 
+module.exports =
   on: eventbus.on.bind(eventbus)
   emit: eventbus.emit.bind(eventbus)
   removeAllListeners: eventbus.removeAllListeners.bind(eventbus)

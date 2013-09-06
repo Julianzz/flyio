@@ -6,31 +6,36 @@ EventEmitter = require("events").EventEmitter
 vfsLocal = require("vfs-local")
 
 eventEmitter = new EventEmitter()
-vfs = vfsLocal({ root: "/" }) 
+vfs = vfsLocal({ root: "/" })
 vfs.env = {}
 
 manager = new pm.ProcessManager({
   "shell": shell.factory(vfs)
-  }, eventEmitter)
+}, eventEmitter)
 
 console.log manager.spawn
 manager.spawn "shell", {
-  command: "ls",
-  args: ["-l"],
-  cwd: __dirname,
+  command: "ls"
+  args: ["-l"]
+  cwd: __dirname
   env: {}
 }, "shell", (err, pid) ->
-  assert.equal(err, null);
+  assert.equal(err, null)
   
-  processes = manager.ps();
-  assert.equal(processes[pid].command, "ls -l");
-  assert.equal(processes[pid].type, "shell");
+  processes = manager.ps()
+  assert.equal(processes[pid].command, "ls -l")
+  assert.equal(processes[pid].type, "shell")
   console.log processes
   eventEmitter.on "shell", (msg) ->
     
-    if msg.type == "shell-exit" 
+    if msg.type == "shell-exit"
       processes =manager.ps()
       assert.equal(processes[pid], null)
-      return 
+      return
     if msg.type == "shell-data"
       console.log msg.data.toString()
+
+
+values = { time: "zhong" }
+mm = values and values.time
+console.log "==========" + mm

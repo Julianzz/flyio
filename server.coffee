@@ -3,43 +3,29 @@ users = require("./users")
 Vfs = require("vfs-local")
 FileList = require("./filelist")
 
-filelist = new FileList
-
-options = 
-  root: "/"
-
-vfs = Vfs(options)
-
-options = 
-  path: "./"
-
-console.log(filelist)
-filelist.exec options,vfs, (data)->
-    console.log data
-  ,(code, stderr)->
-    console.log(code,stderr)
-
 app.http().io()
 app.io.route 'ready', (req) ->
   console.log("reay")
-  req.io.emit 'talk', 
-    message: 'io event from an io route on the server' 
-    
+  req.io.emit 'talk',
+    message: 'io event from an io route on the server'
+
+#app.set('view engine', 'jade')
+app.set('views', __dirname + '/views')
 app.get '/', (req, res) ->
-  res.sendfile(__dirname + '/index.html')
+  res.sendfile(__dirname + '/views/index.html')
 
 app.io.sockets.on 'connection', (socket) ->
-  user = users.addUser() 
+  user = users.addUser()
   
-  socket.emit "welcome", user 
+  socket.emit "welcome", user
   socket.on 'disconnect', ->
-    users.removeUser(user);
+    users.removeUser(user)
 
   socket.on "click", ->
     user.clicks += 1
 
-    app.io.sockets.emit "win", { 
-      message: "<strong>" + user.name + "</strong> rocks!" 
+    app.io.sockets.emit "win", {
+      message: "<strong>" + user.name + "</strong> rocks!"
     }
 
 app.listen(7076)

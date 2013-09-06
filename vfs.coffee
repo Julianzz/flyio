@@ -1,7 +1,7 @@
 
 assert = require("assert")
 
-options = 
+options =
   root: "/"
   
 vfs = require("vfs-local")(options)

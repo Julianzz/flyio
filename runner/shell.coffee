@@ -6,6 +6,7 @@ vfs = require("../vfs")
 exports = module.exports
 
 class Runner
+  
   name :  "shell" 
   constructor: (vfs, options, callback) ->
     @vfs = vfs
@@ -81,7 +82,7 @@ class Runner
   kill: (signal) ->
     this.child && this.child.kill(signal);
 
-  describe: () ->
+  describe:  ->
     return {
       command: [@command].concat(@args).join(" ")
       type: @name
@@ -90,8 +91,6 @@ class Runner
   attachEvents: (child) ->
     self = @
     pid = child.pid
-
-
 
     emit = (msg) =>
       @eventEmitter.emit(@eventName, msg)

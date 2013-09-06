@@ -2,11 +2,11 @@ Moniker = require('moniker')
 
 class User
   constructor: ->
-    @users = {} 
+    @users = {}
     
   addUser: ->
     name = Moniker.choose()
-    user = 
+    user =
       name: name
       clicks: 0
   
@@ -20,9 +20,9 @@ class User
     return user
   
   updateUsers: (callback) ->
-    str = '';
+    str = ''
     for user of @users
-        str += user.name + ' <small>(' + user.clicks + ' clicks)</small>'
+      str += user.name + ' <small>(' + user.clicks + ' clicks)</small>'
         
     callback( str ) if callback
 

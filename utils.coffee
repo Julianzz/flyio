@@ -1,11 +1,11 @@
 
-Util = require('util');
+Util = require('util')
 _ = require('underscore')
 
 exports.extend = (dest, src, noOverwrite) ->
   for prop of src
     if !noOverwrite or typeof dest[prop] == 'undefined'
-      dest[prop] = src[prop];
+      dest[prop] = src[prop]
   return dest
 
 
@@ -36,10 +36,10 @@ exports.log = ->
   return if !args.length
 
   msg = ( args.map (arg) ->
-      return if typeof arg != 'string' then  Util.inspect(arg) else arg
-    ).join(' ')
+    return if typeof arg != 'string' then  Util.inspect(arg) else arg
+  ).join(' ')
     
   pfx = levels[level][0] + '[' + level + ']' + levels[level][1]
 
   _.each msg.split('\n'), (line) ->
-      console.log(pfx + ' ' + line)
+    console.log(pfx + ' ' + line)
