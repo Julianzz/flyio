@@ -2,6 +2,14 @@ pm = require("./process_manager")
 shell = require("./runner/shell")
 assert = require("assert")
 EventEmitter = require("events").EventEmitter
+tmp = {
+  EventEmitter
+  assert
+}
+
+{ EventEmitter } = tmp
+
+console.log tmp
 
 vfsLocal = require("vfs-local")
 

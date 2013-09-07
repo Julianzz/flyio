@@ -11,6 +11,12 @@
     "asyncjs": "*",
     "request": "*",
     "jasmine-node": "*",
+    "stack": "~0.1.0",
+    "vfs-http-adapter": "~0.0.0",
+    "vfs-child": "~0.1.0",
+    "optparse":           "1.0.4",
+    "scoped-http-client": "0.9.8",
+    "log":                "1.4.0",
     "vfs": "git://github.com/c9/vfs.git#6c7249e96a5cde8b7957fbdf1cb838a9a7959afb",
     "vfs-nodefs-adapter": "0.3.0",
     "vfs-local": "https://github.com/c9/vfs-local/tarball/5a95c4a7b313acef3338c31da0001a0d13e9c452"

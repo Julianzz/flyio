@@ -7,7 +7,22 @@ io.emit('ready')
 
 // Listen for the talk event.
 io.on('talk', function(data) {
-    alert(data.message)
-})  
+    alert(data.message);
+})
+io.on("filelist", function( data ) {
+  alert( data.data );
+})
+io.emit("filelist")
+
+
 
 </script>
+
+<body>
+
+<form method="post" enctype="multipart/form-data" action="/file-upload">
+    <input type="text" name="username">
+    <input type="password" name="password">
+    <input type="file" name="thumbnail">
+    <input type="submit">
+</form>
