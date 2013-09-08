@@ -46,4 +46,14 @@ task 'test', 'Run the Pow test suite', ->
     {reporters} = require 'nodeunit'
     process.chdir __dirname
     reporters.default.run ['test']
+    
+task 'start', 'Start pow server', ->
+  build true
+  options = [ '-w', 'lib', 'server.coffee' ]
+  coffee = spawn 'nodemon', options
+  coffee.stdout.on 'data', (data) -> print data.toString()
+  coffee.stderr.on 'data', (data) -> print data.toString()
+  coffee.on 'exit', (status) -> callback?() if status is 0
+
+
 

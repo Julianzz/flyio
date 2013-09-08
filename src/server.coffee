@@ -11,7 +11,6 @@ eventEmitter = new EventEmitter()
 vfs = vfsLocal({ root: "/Users/lzz/Sparrow/flyio/" })
 vfs.env = {}
 
-
 app.http().io()
 app.io.route 'ready', (req) ->
   console.log("reay")
@@ -19,9 +18,9 @@ app.io.route 'ready', (req) ->
     message: 'io event from an io route on the server'
 
 #app.set('view engine', 'jade')
-app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/../views')
 app.get '/', (req, res) ->
-  res.sendfile(__dirname + '/views/index.html')
+  res.sendfile(__dirname + '/../views/index.html')
 
 restful = require('vfs-http-adapter')("/files", vfs)
 app.use restful
@@ -57,6 +56,5 @@ app.io.sockets.on 'connection', (socket) ->
     , (err, data )->
       console.log err,data if err
       console.log err,data
-      
 
-app.listen(7076)
+module.exports = app

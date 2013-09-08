@@ -2,6 +2,8 @@
 Util = require('util')
 _ = require('underscore')
 
+exports = module.exports
+
 exports.extend = (dest, src, noOverwrite) ->
   for prop of src
     if !noOverwrite or typeof dest[prop] == 'undefined'
