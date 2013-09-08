@@ -1,6 +1,5 @@
-
-util = require("util");
-{ EventEmitter } = require("events") 
+util        = require "util" 
+{ EventEmitter } = require "events"
 
 class FileWatcher extends EventEmitter
   

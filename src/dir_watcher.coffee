@@ -1,9 +1,5 @@
-
-
-util = require("util")
-FileWatcher = require("./file_watcher")
-
-module.exports = DirWatcher
+util          = require "util"
+FileWatcher   = require "./file_watcher"
 
 class DirWatcher extends FileWatcher
   _onChange: (event, path) ->
@@ -46,4 +42,5 @@ class DirWatcher extends FileWatcher
         return if called
         called = true
         callback null, files
-      
+        
+module.exports = DirWatcher  

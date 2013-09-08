@@ -5,6 +5,7 @@ async      = require "async"
 {execFile} = require "child_process"
 {Stream}   = require "stream"
 
+exports = module.exports
 # The `LineBuffer` class is a `Stream` that emits a `data` event for
 # each line in the stream.
 exports.LineBuffer = class LineBuffer extends Stream

@@ -72,10 +72,10 @@ class Watcher
 vfs = require "./vfs"
 _watcher = new Watcher(vfs)
 
-module.exports.Watcher = Watcher
-module.exports.watch (path,onChange, onClose, onError ) ->
+module.exports.Watcher  = Watcher
+module.exports.watch    = (path,onChange, onClose, onError ) ->
   return _watcher.watch path,onChange, onClose, onError
-module.exports.unwatch (listerner) ->
+module.exports.unwatch  =(listerner) ->
   _watcher.unwatch(listener)
 
   

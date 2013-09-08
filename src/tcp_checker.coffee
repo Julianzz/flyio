@@ -1,6 +1,6 @@
-pm = require "./process_manager"
+pm  = require "./process_manager"
 
-exports.tcpChecker = ( port, eventName = "checker", tcpIntervals = [500, 1000, 2000, 4000, 8000] ) ->
+module.exports.tcpChecker = ( port, eventName = "checker", tcpIntervals = [500, 1000, 2000, 4000, 8000] ) ->
   index = 0
   checkTCP = ->
     pm.exc "shell", { command: "lsof",args: ["-i", ":"+ port ] }, (code, stdout, stderr ) ->

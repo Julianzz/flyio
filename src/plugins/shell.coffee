@@ -1,7 +1,7 @@
-nodefs = require("vfs-nodefs-adapter");
-pm = require("../process_manager")
-utils = require("../utils")
-vfs = require("../vfs")
+nodefs      = require "vfs-nodefs-adapter"
+pm          = require "../process_manager"
+utils       = require "../utils"
+vfs         = require "../vfs"
 
 exports = module.exports
 

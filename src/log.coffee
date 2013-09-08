@@ -1,4 +1,6 @@
 
-Log = require('log')("info")
-exports = log
+Log = require('log')
+log = new Log("info")
+
+module.exports = log
 

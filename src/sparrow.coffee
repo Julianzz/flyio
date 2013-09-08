@@ -3,7 +3,7 @@ OptParse      = require 'optparse'
 Path          = require 'path'
 App           = require 'express.io'
 Vfs           = require './vfs'
-logger        = require './log'
+Logger        = require './log'
 httpAdapter   = require 'vfs-http-adapter'
 Users         = require './users'
 
@@ -12,13 +12,12 @@ watcher       = require './watcher'
 
 { EventEmitter } = require 'events'
 
-
 class Sparrow
   
   constructor: ( @vfs = Vfs, @plugins = [ __dirname + '/plugins' ] )->
-    @logger   = logger
+    @logger   = Logger
 
-    @app      = pm
+    @app      = App()
   
     @users    = Users
     @app.http().io()
@@ -27,15 +26,15 @@ class Sparrow
     @fileRestPath = "/files"
     @watcher = new watcher.Watcher(@vfs)
     
-    loadPlugins( @plugins )
-    setupExpress()
-    setupVfs()
-    setupSocketIO()
+    @loadPlugins( @plugins )
+    @setupExpress()
+    @setupVfs()
+    @setupSocketIO()
   
   #load plugins 
   loadPlugins: (plugins)->
     for fileName in plugins
-      load( fileName )
+      @load( fileName )
     
   # setup express
   setupExpress: ->
@@ -70,7 +69,7 @@ class Sparrow
     full = Path.join path, Path.basename(file, ext)
     if ext is '.coffee' or ext is '.js'
       try
-        require(full)(@)
+        require(full)
       catch error
         @logger.error "Unable to load #{full}: #{error.stack}"
         process.exit(1)
@@ -81,3 +80,9 @@ class Sparrow
   
   emit: (event, args...) ->
     @events.emit event, args...
+    
+  listen: (port = 7001, host="0.0.0.0" ) ->
+    @logger.info "begin to start server %s:%d", host, port 
+    @app.listen(port,host)
+
+module.exports = Sparrow  

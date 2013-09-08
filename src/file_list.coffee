@@ -1,6 +1,6 @@
-Os = require("os")
-Path = require("path")
-_ = require("underscore")
+Os          = require "os"
+Path        = require "path"
+_           = require "underscore"
 
 class FileList
 

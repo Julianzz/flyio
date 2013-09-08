@@ -1,13 +1,15 @@
 ###
   some common function used by other module
 ###
-_ = require 'underscore'
-fs         = require "fs"
-path       = require "path"
-async      = require "async"
-{execFile} = require "child_process"
-{Stream}   = require "stream"
-util = require 'util'
+_             = require 'underscore'
+fs            = require "fs"
+path          = require "path"
+async         = require "async"
+{execFile}    = require "child_process"
+{Stream}      = require "stream"
+util          = require 'util'
+
+exports = module.exports
 
 exports.extend = (dest, src, noOverwrite) ->
   for prop of src

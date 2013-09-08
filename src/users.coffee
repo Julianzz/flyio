@@ -1,4 +1,4 @@
-Moniker = require('moniker')
+Moniker   = require('moniker')
 
 class User
   constructor: ->

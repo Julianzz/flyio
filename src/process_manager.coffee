@@ -1,6 +1,7 @@
 
-async = require("asyncjs")
-_ = require("underscore")
+async             = require "asyncjs"
+_                 = require "underscore"
+{ EventEmitter }  = require "events"
 
 class ProcessManager
   
