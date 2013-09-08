@@ -14,3 +14,7 @@ server = require __dirname+"/lib/server"
 server.listen(nconf.get("port"))
 
 
+checker = require "./lib/tcp_checker" 
+
+checker.tcpChecker 3000
+

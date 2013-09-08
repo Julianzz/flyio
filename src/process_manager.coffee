@@ -1,7 +1,6 @@
 
 async = require("asyncjs")
 _ = require("underscore")
-eventbus = require("./eventbus")
 
 class ProcessManager
   
@@ -66,15 +65,11 @@ class ProcessManager
       + runnerId) if not runnerFactory
     
     runnerFactory options, @eventEmitter, "", (err, child) =>
-      
       return onStart(err) if err
-      
       child.exec (err, pid) ->
         return onStart(err) if err
-
         self.processes[child.pid] = child
         onStart null, child.pid
-
     , onExit
         
   ps: ->
@@ -120,41 +115,20 @@ class ProcessManager
 
         @processes[child.pid] = child
         callback(null, child.pid, child)
-        @tcpChecker runnerId, child, eventName
         
-
-  tcpChecker: (runnerId, child, eventName) ->
-    self = @
-    return if _.indexOf( @runnerTypes(), runnerId ) == -1
-    i = 0
-    tcpIntervals = [500, 1000, 2000, 4000, 8000]
-          
-    checkTCP = ->
-      
-      @exec "shell", { command: "lsof",args: ["-i", ":"+ (child.port || 8080)] }
-      ,( (err, pid) ->
-      ), (code, stdout, stderr ) ->
-        return if code
-        if stdout
-          msg =
-            "type": runnerId + "-web-start"
-            "pid": child.pid
-            "url": child.url
-          @eventEmitter.emit(eventName, msg)
-
-        else if ++i < tcpIntervals.length
-          setTimeout checkTCP, tcpIntervals[i]
-
-    setTimeout checkTCP, tcpIntervals[i]
-
 runners = {}
-eventEmitter = eventbus
-pm = new ProcessManager(runners, eventEmitter)
+eventbus = new EventEmitter()
+pm = new ProcessManager(runners, eventbus )
 
-module.exports =
-  
+module.exports = 
+
   ProcessManager: ProcessManager
-  
+    
+  on: eventbus.on.bind(eventbus)
+  emit: eventbus.emit.bind(eventbus)
+  removeAllListeners: eventbus.removeAllListeners.bind(eventbus)
+  removeListener: eventbus.removeListener.bind(eventbus)
+
   ps: (callback) ->
     callback(null, pm.ps())
       

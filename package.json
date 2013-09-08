@@ -5,6 +5,7 @@
   "main": "index.js",
   
   "dependencies": {
+    "jade":"*",
     "express.io": "*",
     "moniker": "*",
     "underscore": "*",

@@ -43,7 +43,7 @@ class Runner
      
      @createChild (err, child) ->
   
-       return onStart(err) if (err)
+       return onStart(err) if err
 
        self.child = child
        self.pid = child.pid
