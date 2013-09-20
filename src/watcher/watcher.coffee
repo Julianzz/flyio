@@ -69,7 +69,7 @@ class Watcher
       @watchers[key].close()
       delete @watchers[key]
       
-vfs = require "./vfs"
+vfs = require "../vfs"
 _watcher = new Watcher(vfs)
 
 module.exports.Watcher  = Watcher

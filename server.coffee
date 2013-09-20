@@ -1,6 +1,5 @@
 
 coffee    = require "coffee-script"
-express   = require "express" 
 vfs       = require "./lib/vfs"
 
 nconf = require("nconf").use("memory")
@@ -8,7 +7,9 @@ nconf = require("nconf").use("memory")
   .env()
   .file({file: __dirname+"/config.json"})
   .defaults
-    "PORT": 7001
+    "port": 7001
+    "davprefix": "/davfils/"
+    "filerest": "/filerest"
 
 process.on 'uncaughtException', (err) ->
   console.log(err.stack)

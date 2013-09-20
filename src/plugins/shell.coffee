@@ -3,10 +3,7 @@ pm          = require "../process_manager"
 utils       = require "../utils"
 vfs         = require "../vfs"
 
-exports = module.exports
-
 class Runner
-  
   name :  "shell" 
   constructor: (vfs, options, callback) ->
     @vfs = vfs
@@ -25,7 +22,7 @@ class Runner
       @runOptions.stdoutEncoding = @encoding
       @runOptions.stderrEncoding = @encoding
 
-   
+ 
     @runOptions.env = options.env if options.env
 
     @runOptions.env = @runOptions.env || {} 
@@ -37,12 +34,12 @@ class Runner
     @pid = 0
 
     callback(null, this) 
-    
+  
   exec: (onStart, onExit) ->
      self = this
-     
+   
      @createChild (err, child) ->
-  
+
        return onStart(err) if err
 
        self.child = child
@@ -62,7 +59,7 @@ class Runner
 
        child.stderr.on "data", (data) ->
          err += data.toString("utf8") 
-  
+
   createChild: (callback) ->
     @runOptions.args = this.args;
     @vfs.spawn @command, @runOptions,(err, meta) ->
@@ -78,7 +75,7 @@ class Runner
       self.attachEvents(child)
 
       callback(null, child.pid)
-  
+
   kill: (signal) ->
     this.child && this.child.kill(signal);
 
@@ -103,10 +100,10 @@ class Runner
           "stream": stream
           "data": data
           "extra": self.extra
-          
+        
     child.stdout.on("data", sender("stdout")) 
     child.stderr.on("data", sender("stderr"))
-    
+  
     child.on "exit", (code) ->
       self.pid = 0
       emit
@@ -120,8 +117,8 @@ class Runner
         "type": self.name + "-start"
         "pid": pid
         "extra": self.extra
-
-exports.factory = (vfs) ->
+        
+factory = (vfs) ->
   return (args, eventEmitter, eventName, callback) ->
     options = {}
 
@@ -131,7 +128,14 @@ exports.factory = (vfs) ->
     options.args = args.args
 
     return new Runner(vfs, options, callback)
+    
+module.exports = (app) ->
+  
+  pm.addRunner "shell", factory(app.vfs) 
+  
+  return {
+    factory: factory
+    Runner : Runner
+  }
 
-exports.Runner = Runner
 
-pm.addRunner "shell", exports.factory(vfs) 

@@ -2,78 +2,88 @@ Fs            = require 'fs'
 OptParse      = require 'optparse'
 Path          = require 'path'
 App           = require 'express.io'
+Express       = require 'express'
 Vfs           = require './vfs'
 Logger        = require './log'
-httpAdapter   = require 'vfs-http-adapter'
 Users         = require './users'
+Loader        = require './loader'
+
+nconf         = require("nconf")
+
+DavFileSystem = require "./dav/file_system"
 
 pm            = require './process_manager'
-watcher       = require './watcher'
+watcher       = require './watcher/watcher'
+sandbox       = require "./sandbox"
+
 
 { EventEmitter } = require 'events'
 
 class Sparrow
   
-  constructor: ( @vfs = Vfs, @plugins = [ __dirname + '/plugins' ] )->
+  constructor: ( @vfs = Vfs, @pluginsDir = [ __dirname + '/plugins' ], @conf = nconf )->
     @logger   = Logger
-
-    @app      = App()
-  
     @users    = Users
-    @app.http().io()
-    @events   = new EventEmitter
-    @pm = pm.ProcessManager()    
+    @plugins = [] 
     @fileRestPath = "/files"
+    @sandbox  = sandbox
+    
+    @events   = new EventEmitter
     @watcher = new watcher.Watcher(@vfs)
     
-    @loadPlugins( @plugins )
+    @pm = pm.ProcessManager() 
+    
+    @app      = App()
+    @app.http().io()
+    @loadPlugins( @pluginsDir )
     @setupExpress()
-    @setupVfs()
     @setupSocketIO()
-  
+    
+    @loadMiddleware()
+
+    console.log( @app.routes )
+    
+    
   #load plugins 
   loadPlugins: (plugins)->
-    for fileName in plugins
-      @load( fileName )
+    for dirName in plugins
+      loader = new Loader(dirName,@)
+      loader.loads() 
+      [].push.apply( @plugins,loader.plugins )
+    console.log @plugins
     
   # setup express
   setupExpress: ->
-    @app.set('view engine', 'jade')
-    @app.set('views', Path.join(__dirname,'../views'))
+    @app.set 'view engine', 'jade'
+    @app.set 'views', Path.join(__dirname,'../views')
+    
+    @app.get '/show/:filename',( req, res ) ->
+      fullPath = Path.join(__dirname,"..","views" ,req.params.filename )
+      res.sendfile( fullPath)
+      
     @app.get '/', (req, res) ->
       res.sendfile( Path.join(__dirname, '/../views/index.html') )
-     
-  setupVfs: ->
-    restful = httpAdapter( @fileRestPath, @vfs)
-    @app.use restful
-    
-  setupSocketIO: ->
-    @app.io.sockets.on 'connection', (socket) ->
-      user = @users.addUser(@)
-      socket.emit "welcome", user
-      socket.on 'disconnect', ->
-        @users.removeUser(user)
       
-  onEvent: ( eventName, callback) ->
+    @app.use "/static", Express.static( Path.join(__dirname,"..",'media') )
+    @app.use(Express.logger())
+      
+  setupSocketIO: ->
+    @app.io.sockets.on 'connection', (socket) =>
+      user = @users.addUser(@)      
+      socket.emit "welcome", {
+        "name": user.name
+      }
+      socket.on 'disconnect', =>
+        @users.removeUser(user)
+  
+  loadMiddleware: ->
+    loader = new Loader(__dirname + '/middleware', @ )
+    loader.loads()
+    for plugin in loader.plugins
+      @app.use plugin
     
-  load: (path) ->
-    @logger.debug "Loading scripts from #{path}"
-    Fs.exists path, (exists) =>
-      if exists
-        for file in Fs.readdirSync(path)
-          @loadFile path, file
-          
-  # Returns nothing.
-  loadFile: (path, file) ->
-    ext  = Path.extname file
-    full = Path.join path, Path.basename(file, ext)
-    if ext is '.coffee' or ext is '.js'
-      try
-        require(full)
-      catch error
-        @logger.error "Unable to load #{full}: #{error.stack}"
-        process.exit(1)
-            
+  onEvent: ( eventName, callback) ->
+                
   #wrapper eventemitter 
   on: (event, args...) ->
     @events.on event, args...

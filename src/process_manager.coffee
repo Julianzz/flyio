@@ -5,35 +5,34 @@ _                 = require "underscore"
 
 class ProcessManager
   
-  constructor: (@runners, @eventEmitter)->
-    @processes = {}
-  
+  constructor: (@runners, @eventEmitter,@processes = {} )->
+    
   destroy: ->
     @disposed = true
     @clearInternal( @shutDownInternal )
-    ps = @ps()
-    _.each( ps, @kill )
+    processes = @ps()
+    _.each( processes, @kill )
     
   prepareShutdown:(callback) =>
     processCount = 0
     
-    @shutDownInterval = setInterval (=>
+    @shutDownInterval = setInterval =>
       processCount = _.size( @ps() )
       if not processCount
         return callback()
-      ), 100
+    , 100
     
   kill: (pid, callback) ->
     if typeof callback != "function"
       callback = ->
 
     child = @processes[pid]
-    if !child
-      return callback("Process does not exist")
+    
+    return callback("Process does not exist") if not child
 
     child.killed = true
     child.kill("SIGKILL")
-    callback()
+    callback() if callback?
 
   debug: (pid, debugMessage, callback) ->
     child = @processes[pid]
@@ -116,7 +115,8 @@ class ProcessManager
 
         @processes[child.pid] = child
         callback(null, child.pid, child)
-        
+
+   
 runners = {}
 eventbus = new EventEmitter()
 pm = new ProcessManager(runners, eventbus )
@@ -124,7 +124,8 @@ pm = new ProcessManager(runners, eventbus )
 module.exports = 
 
   ProcessManager: ProcessManager
-    
+  
+  #events management
   on: eventbus.on.bind(eventbus)
   emit: eventbus.emit.bind(eventbus)
   removeAllListeners: eventbus.removeAllListeners.bind(eventbus)
@@ -144,10 +145,15 @@ module.exports =
       return callback(err) if (err)
     , callback
         
-  kill: pm.kill.bind(pm)
+  kill: (pid, callback)->
+    pm.kill pid,callback
+  
   addRunner: (name, runner) ->
     runners[name] = runner
       
   execCommands: pm.execCommands.bind(pm)
+  
   destroy: pm.destroy.bind(pm)
-  prepareShutdown: pm.prepareShutdown.bind(pm)
+  
+  prepareShutdown: (callback)->
+    pm.prepareShutdown(callback)

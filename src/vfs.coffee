@@ -2,7 +2,7 @@
 assert = require("assert")
 
 options =
-  root: "/"
+  root: __dirname
 
 vfs = require("vfs-local")(options)
 vfs.env = {}

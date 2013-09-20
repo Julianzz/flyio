@@ -2,6 +2,7 @@ util          = require "util"
 FileWatcher   = require "./file_watcher"
 
 class DirWatcher extends FileWatcher
+  
   _onChange: (event, path) ->
     self = @
     if not @watcher

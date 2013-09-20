@@ -1,0 +1,6 @@
+
+response
+class Response
+  
+  constructor: ->
+    
