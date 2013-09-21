@@ -6,21 +6,17 @@ async      = require "async"
 {Stream}   = require "stream"
 
 exports = module.exports
-# The `LineBuffer` class is a `Stream` that emits a `data` event for
-# each line in the stream.
+
 exports.LineBuffer = class LineBuffer extends Stream
-  # Create a `LineBuffer` around the given stream.
+  
   constructor: (@stream) ->
     @readable = true
     @_buffer = ""
 
-    # Install handlers for the underlying stream's `data` and `end`
-    # events.
-    self = this
+    self = @
     @stream.on 'data', (args...) -> self.write args...
     @stream.on 'end',  (args...) -> self.end args...
 
-  # Write a chunk of data read from the stream to the internal buffer.
   write: (chunk) ->
     @_buffer += chunk
 

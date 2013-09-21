@@ -1,6 +1,0 @@
-
-response
-class Response
-  
-  constructor: ->
-    

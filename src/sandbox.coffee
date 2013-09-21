@@ -8,6 +8,7 @@ options =
   userDir: "/"
   
 module.exports = 
+  
   projectDir: options.projectDir
   workspaceId: options.workspaceId
   host: options.host

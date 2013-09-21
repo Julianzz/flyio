@@ -5,6 +5,9 @@
   "main": "index.js",
   
   "dependencies": {
+    "hubot":                "*",
+    "hubot-scripts":        "~2.5.6",
+    "connect-requestid":    "~1.0.1",
     "jade":                 "~0.35.0",
     "nconf":                "0.6.7",
     "express.io":           "~1.1.12",
